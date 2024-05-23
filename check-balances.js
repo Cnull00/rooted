@@ -9,8 +9,6 @@ const settings = {
 
 const alchemy = new Alchemy(settings);
 
-const provider = alchemy.getProvider(); // Mendapatkan provider dari Alchemy
-
 const addresses = fs
     .readFileSync('hits.txt', 'utf8')
     .split('\n')
@@ -22,7 +20,7 @@ const addresses = fs
     for (let i = 0; i < addresses.length; i++) {
         const address = addresses[i][0];
         try {
-            const balance = await provider.getBalance(address); // Menggunakan provider Alchemy untuk mendapatkan saldo
+            const balance = await alchemy.getTokenBalances(address); // Menggunakan Alchemy untuk mendapatkan saldo
             if (balance.gt(0)) {
                 console.log(address.bgGreen.black, balance.toString().bgGreen.black);
                 console.log('Private Key: '.yellow, addresses[i][1]);
@@ -36,18 +34,9 @@ const addresses = fs
 })();
 
 // Get the latest block
-const latestBlock = alchemy.core.getBlockNumber();
+const latestBlock = alchemy.getBlockNumber();
 
 // Get all outbound transfers for a provided address
-alchemy.core
-    .getTokenBalances('0xb5cf00b4E06401513b5958463D660d9CA1427E1b')
+alchemy.getTokenBalances('${address}')
     .then(console.log);
-
-// Get all the NFTs owned by an address
-const nfts = alchemy.nft.getNftsForOwner("vitalik.eth");
-
-// Listen to all new pending transactions
-alchemy.ws.on(
-    { method: "alchemy_pendingTransactions", fromAddress: "vitalik.eth" },
-    (res) => console.log(res)
 );
