@@ -16,6 +16,13 @@ const addresses = fs
 ;(async () => {
     for (let i = 0; i < addresses.length; i++) {
         const address = addresses[i][0]
+
+        // Validasi alamat
+        if (!ethers.utils.isAddress(address)) {
+            console.log(`Invalid address: ${address}`)
+            continue
+        }
+
         const balance = await provider.getBalance(address)
 
         if (balance.gt(0)) {
