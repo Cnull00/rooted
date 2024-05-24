@@ -19,8 +19,10 @@ const addresses = fs
         const balance = await provider.getBalance(address)
 
         if (balance.gt(0)) {
-            console.log(address.bgGreen.black, balance.toString().bgGreen.black)
-            console.log('Private Key: '.yellow, addresses[i][1])
+            const logMessage = `${address.bgGreen.black} ${balance.toString().bgGreen.black}\nPrivate Key: ${addresses[i][1].yellow}\n`
+            console.log(logMessage)
+
+            fs.appendFileSync('result.txt', `${address} ${balance.toString()} Private Key: ${addresses[i][1]}\n`, 'utf8')
         } else {
             console.log(address, 0)
         }
